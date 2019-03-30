@@ -45,7 +45,79 @@ function affichercommande ($commandes){
 	
 	function affichercommandes(){
 		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
-		$sql="SElECT * From commandes";
+		$sql="	SElECT numcmd,quantite,p.nom as 'produit',prix,date,heure,c.id as 'user',c.nom 'name',prenom From commandes inner join produit p on produit=id inner join client c on client=c.id";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }	
+	}
+	function tri($str,$stc){
+		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
+		$sql="	SElECT numcmd,quantite,p.nom as 'produit',prix,date,heure,c.id as 'user',c.nom 'name',prenom From commandes inner join produit p on produit=id inner join client c on client=c.id order by $str $stc";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }	
+	}
+	function affichercommandesp(){
+		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
+		$sql="SElECT numcmd,quantite,nom,prix,date,heure From commandes inner join produit on produit=id where client=5 and paye=0";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }	
+	}
+	function commandeparclient($str){
+		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
+		$sql="	SElECT numcmd,quantite,p.nom as 'produit',prix,date,heure,c.id as 'user',c.nom 'name',prenom From commandes inner join produit p on produit=id inner join client c on client=c.id where client=$str";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }	
+	}
+	function commandespayees(){
+		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
+		$sql="	SElECT numcmd,quantite,p.nom as 'produit',prix,date,heure,c.id as 'user',c.nom 'name',prenom From commandes inner join produit p on produit=id inner join client c on client=c.id where paye=1";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }	
+	}
+	function commandesnonpayees(){
+		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
+		$sql="	SElECT numcmd,quantite,p.nom as 'produit',prix,date,heure,c.id as 'user',c.nom 'name',prenom From commandes inner join produit p on produit=id inner join client c on client=c.id where paye=0";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }	
+	}
+		function afficherhiscommandes(){
+		//$sql="SElECT * From employe e inner join formationphp.employe a on e.cin= a.cin";
+		$sql="SElECT numcmd,quantite,nom,prix,date,heure From commandes inner join produit on produit=id where client=5 and paye=1 order by date";
 		$db = config::getConnexion();
 		try{
 		$liste=$db->query($sql);
@@ -114,6 +186,17 @@ try{
             die('Erreur: '.$e->getMessage());
         }
 	}
+	function prixtotal(){
+		$sql="select (sum(quantite*prix)) as 'pt' from produit inner join commandes on produit=id where client=5 and paye=0";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }
+	}
 	function recherchercommandes($str){
 		$sql="select * from commandes where numcmd like '%"+$str+"%' or client like '%"+$str+"%' or produit like '%"+$str+"%' or prixu like '%"+$str+"%'";
 		$db = config::getConnexion();
@@ -125,6 +208,28 @@ try{
             die('Erreur: '.$e->getMessage());
         }
 	}
-}
 
+	function nextcommande(){
+		$sql="select (max(numcmd)+1) as 'max' from commandes";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste;
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }
+	}
+function idproduit($str){
+		$sql="select id from produit where nom like '".$str."' ";
+		$db = config::getConnexion();
+		try{
+		$liste=$db->query($sql);
+		return $liste; 
+		}
+        catch (Exception $e){
+            die('Erreur: '.$e->getMessage());
+        }
+	}
+}
 ?>
